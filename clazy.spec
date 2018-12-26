@@ -3,8 +3,8 @@
 
 Name:		clazy
 Summary:	Qt oriented code checker
-Version:	1.3
-Release:	2
+Version:	1.4
+Release:	1
 Group:		Graphical desktop/KDE
 License:	GPLv2
 Url:		http://www.aelog.org/
@@ -28,8 +28,9 @@ Krazy's little brother.
 %ninja_install -C build
 
 # manpage in wrong place
-mkdir -p %{buildroot}/%{_mandir}/man1
-mv %{buildroot}/%_prefix/man/man1/* %{buildroot}/%{_mandir}/man1
+# looks like 1.4 fixed it
+#mkdir -p %{buildroot}/%{_mandir}/man1
+#mv %{buildroot}/%_prefix/man/man1/* %{buildroot}/%{_mandir}/man1
 
 %files
 %doc README.md
@@ -37,4 +38,5 @@ mv %{buildroot}/%_prefix/man/man1/* %{buildroot}/%{_mandir}/man1
 %{_bindir}/%{name}-standalone
 %{_libdir}/ClangLazy.so
 %{_mandir}/man1/%{name}.1*
-%{_datadir}/%{name}
+#{_datadir}/%{name}
+%{_docdir}/clazy/*
