@@ -28,8 +28,9 @@ Krazy's little brother.
 %ninja_install -C build
 
 # manpage in wrong place
-mkdir -p %{buildroot}/%{_mandir}/man1
-mv %{buildroot}/%_prefix/man/man1/* %{buildroot}/%{_mandir}/man1
+# looks like 1.4 fixed it
+#mkdir -p %{buildroot}/%{_mandir}/man1
+#mv %{buildroot}/%_prefix/man/man1/* %{buildroot}/%{_mandir}/man1
 
 %files
 %doc README.md
