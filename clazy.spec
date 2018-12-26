@@ -39,3 +39,4 @@ Krazy's little brother.
 %{_libdir}/ClangLazy.so
 %{_mandir}/man1/%{name}.1*
 #{_datadir}/%{name}
+%{_docdir}/clazy/*
