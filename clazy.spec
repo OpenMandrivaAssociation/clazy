@@ -36,7 +36,7 @@ Krazy's little brother.
 %doc README.md
 %{_bindir}/%{name}
 %{_bindir}/%{name}-standalone
-#{_libdir}/ClangLazy.so
+%{_libdir}/ClazyPlugin.so
 %{_mandir}/man1/%{name}.1*
-#{_datadir}/%{name}
+%{_datadir}/metainfo/org.kde.clazy.metainfo.xml
 %{_docdir}/clazy/*
