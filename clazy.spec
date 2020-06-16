@@ -9,6 +9,8 @@ Group:		Graphical desktop/KDE
 License:	GPLv2
 Url:		http://www.aelog.org/
 Source0:	http://download.kde.org/stable/%{name}/%{version}/src/%{name}-%{version}.tar.xz
+Patch0:		000-Fix-build-issues-using-llvm-10.0.0.patch
+Patch1:		0001-Make-clazy-build-30-faster-by-using-precompiled-head.patch
 BuildRequires:	cmake(ECM)
 BuildRequires:	llvm-devel
 BuildRequires:	clang-devel
