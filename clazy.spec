@@ -3,7 +3,7 @@
 
 Name:		clazy
 Summary:	Qt oriented code checker
-Version:	1.6
+Version:	1.7
 Release:	1
 Group:		Graphical desktop/KDE
 License:	GPLv2
@@ -28,11 +28,6 @@ Krazy's little brother.
 
 %install
 %ninja_install -C build
-
-# manpage in wrong place
-# looks like 1.4 fixed it
-#mkdir -p %{buildroot}/%{_mandir}/man1
-#mv %{buildroot}/%_prefix/man/man1/* %{buildroot}/%{_mandir}/man1
 
 %files
 %doc README.md
