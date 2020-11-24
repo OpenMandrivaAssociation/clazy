@@ -21,7 +21,7 @@ Qt oriented code checker based on clang framework.
 Krazy's little brother. 
 
 %prep
-%autosetup -p1
+%autosetup -p1 -c
 %cmake_kde5
 
 %build
