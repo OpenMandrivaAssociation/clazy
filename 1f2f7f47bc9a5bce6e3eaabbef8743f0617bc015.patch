@@ -1,0 +1,22 @@
+From 1f2f7f47bc9a5bce6e3eaabbef8743f0617bc015 Mon Sep 17 00:00:00 2001
+From: Sergio Martins <smartins@kde.org>
+Date: Wed, 14 Oct 2020 15:47:13 +0100
+Subject: [PATCH] Fix build with llvm-11
+
+---
+ src/checks/manuallevel/qt6-header-fixes.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/checks/manuallevel/qt6-header-fixes.cpp b/src/checks/manuallevel/qt6-header-fixes.cpp
+index 3bcbc6a5..2f01c601 100644
+--- a/src/checks/manuallevel/qt6-header-fixes.cpp
++++ b/src/checks/manuallevel/qt6-header-fixes.cpp
+@@ -246,7 +246,7 @@ void Qt6HeaderFixes::VisitInclusionDirective(clang::SourceLocation HashLoc, cons
+         return;
+ 
+     string newFileName = "";
+-    if (!newOldHeaderFileMatch(FileName, newFileName))
++    if (!newOldHeaderFileMatch(FileName.str(), newFileName))
+         return;
+ 
+     string replacement = "";
