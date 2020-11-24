@@ -3,12 +3,15 @@
 
 Name:		clazy
 Summary:	Qt oriented code checker
-Version:	1.6
+Version:	1.8
 Release:	1
 Group:		Graphical desktop/KDE
 License:	GPLv2
 Url:		http://www.aelog.org/
 Source0:	http://download.kde.org/stable/%{name}/%{version}/src/%{name}-%{version}.tar.xz
+Patch0:		0000-Fix-build-issues-using-llvm-10.0.0.patch
+Patch1:		0001-Make-clazy-build-30-faster-by-using-precompiled-head.patch
+Patch2:		1f2f7f47bc9a5bce6e3eaabbef8743f0617bc015.patch
 BuildRequires:	cmake(ECM)
 BuildRequires:	llvm-devel
 BuildRequires:	clang-devel
@@ -18,7 +21,7 @@ Qt oriented code checker based on clang framework.
 Krazy's little brother. 
 
 %prep
-%setup -q
+%autosetup -p1
 %cmake_kde5
 
 %build
@@ -26,11 +29,6 @@ Krazy's little brother.
 
 %install
 %ninja_install -C build
-
-# manpage in wrong place
-# looks like 1.4 fixed it
-#mkdir -p %{buildroot}/%{_mandir}/man1
-#mv %{buildroot}/%_prefix/man/man1/* %{buildroot}/%{_mandir}/man1
 
 %files
 %doc README.md
