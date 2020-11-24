@@ -9,8 +9,7 @@ Group:		Graphical desktop/KDE
 License:	GPLv2
 Url:		http://www.aelog.org/
 Source0:	http://download.kde.org/stable/%{name}/%{version}/src/%{name}-%{version}.tar.xz
-Patch1:		0001-Make-clazy-build-30-faster-by-using-precompiled-head.patch
-Patch2:		1f2f7f47bc9a5bce6e3eaabbef8743f0617bc015.patch
+Patch0:		1f2f7f47bc9a5bce6e3eaabbef8743f0617bc015.patch
 BuildRequires:	cmake(ECM)
 BuildRequires:	llvm-devel
 BuildRequires:	clang-devel
