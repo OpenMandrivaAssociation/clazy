@@ -1,0 +1,23 @@
+diff -up clazy-1.9/src/SuppressionManager.cpp.omv~ clazy-1.9/src/SuppressionManager.cpp
+--- clazy-1.9/src/SuppressionManager.cpp.omv~	2021-03-06 05:08:00.837358490 +0100
++++ clazy-1.9/src/SuppressionManager.cpp	2021-03-06 05:21:43.152424341 +0100
+@@ -83,16 +83,13 @@ void SuppressionManager::parseFile(FileI
+     auto it = m_processedFileIDs.insert({hash, Suppressions()}).first;
+     Suppressions &suppressions = (*it).second;
+ 
+-    bool invalid = false;
+-    auto buffer = sm.getBuffer(id, &invalid);
+-    if (invalid) {
++    auto buffer = sm.getBufferOrNone(id);
++    if (!buffer) { // FIXME we should detect the Fake...
+         llvm::errs() << "SuppressionManager::parseFile: Invalid buffer ";
+-        if (buffer)
+-            llvm::errs() << buffer->getBuffer() << "\n";
+         return;
+     }
+ 
+-    Lexer lexer(id, buffer, sm, lo);
++    Lexer lexer(id, buffer.getValue(), sm, lo);
+     lexer.SetCommentRetentionState(true);
+ 
+     Token token;
