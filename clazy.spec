@@ -11,6 +11,7 @@ Url:		http://www.aelog.org/
 Source0:	http://download.kde.org/stable/%{name}/%{version}/src/%{name}-%{version}.tar.xz
 Patch0:		clazy-1.9-llvm-12.0.patch
 BuildRequires:	cmake(ECM)
+BuildRequires:	cmake(Polly)
 BuildRequires:	llvm-devel
 BuildRequires:	clang-devel
 
