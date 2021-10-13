@@ -3,7 +3,7 @@
 
 Name:		clazy
 Summary:	Qt oriented code checker
-Version:	1.9
+Version:	1.10
 Release:	1
 Group:		Graphical desktop/KDE
 License:	GPLv2
@@ -34,6 +34,6 @@ Krazy's little brother.
 %{_bindir}/%{name}
 %{_bindir}/%{name}-standalone
 %{_libdir}/ClazyPlugin.so
-%{_mandir}/man1/%{name}.1*
+%doc %{_mandir}/man1/%{name}.1*
 %{_datadir}/metainfo/org.kde.clazy.metainfo.xml
 %{_docdir}/clazy/*
