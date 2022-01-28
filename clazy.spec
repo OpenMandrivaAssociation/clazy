@@ -3,8 +3,8 @@
 
 Name:		clazy
 Summary:	Qt oriented code checker
-Version:	1.10
-Release:	2
+Version:	1.11
+Release:	1
 Group:		Graphical desktop/KDE
 License:	GPLv2
 Url:		http://www.aelog.org/
