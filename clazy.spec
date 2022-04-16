@@ -30,10 +30,9 @@ Krazy's little brother.
 %ninja_install -C build
 
 %files
-%doc README.md
+%doc %{_docdir}/clazy/*
 %{_bindir}/%{name}
 %{_bindir}/%{name}-standalone
 %{_libdir}/ClazyPlugin.so
 %doc %{_mandir}/man1/%{name}.1*
 %{_datadir}/metainfo/org.kde.clazy.metainfo.xml
-%{_docdir}/clazy/*
