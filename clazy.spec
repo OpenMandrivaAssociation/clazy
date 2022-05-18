@@ -4,12 +4,12 @@
 Name:		clazy
 Summary:	Qt oriented code checker
 Version:	1.11
-Release:	2
+Release:	3
 Group:		Graphical desktop/KDE
 License:	GPLv2
 Url:		http://www.aelog.org/
 Source0:	http://download.kde.org/stable/%{name}/%{version}/src/%{name}-%{version}.tar.xz
-#Patch0:		clazy-1.9-llvm-12.0.patch
+Patch0:		clazy-clang-isnt-buggy-anymore.patch
 BuildRequires:	cmake(ECM)
 BuildRequires:	cmake(Polly)
 BuildRequires:	llvm-devel
@@ -28,6 +28,11 @@ Krazy's little brother.
 
 %install
 %ninja_install -C build
+
+%check
+cd build
+export PATH=`pwd`/bin:$PATH
+ctest || :
 
 %files
 %doc %{_docdir}/clazy/*
