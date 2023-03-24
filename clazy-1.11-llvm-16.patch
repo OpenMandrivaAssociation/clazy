@@ -1,0 +1,212 @@
+diff -up clazy-1.11/src/checkbase.cpp.omv~ clazy-1.11/src/checkbase.cpp
+--- clazy-1.11/src/checkbase.cpp.omv~	2023-03-24 14:48:56.739250631 +0100
++++ clazy-1.11/src/checkbase.cpp	2023-03-24 15:01:40.776127203 +0100
+@@ -105,7 +105,13 @@ void ClazyPreprocessorCallbacks::MacroDe
+ }
+ 
+ void ClazyPreprocessorCallbacks::InclusionDirective(clang::SourceLocation HashLoc, const clang::Token &IncludeTok, clang::StringRef FileName, bool IsAngled,
+-                                                    clang::CharSourceRange FilenameRange, Optional<clang::FileEntryRef> File, clang::StringRef SearchPath,
++                                                    clang::CharSourceRange FilenameRange,
++#if LLVM_VERSION_MAJOR >= 16
++						    clang::OptionalFileEntryRef File,
++#else
++						    Optional<clang::FileEntryRef> File,
++#endif
++						    clang::StringRef SearchPath,
+                                                     clang::StringRef RelativePath, const clang::Module *Imported, clang::SrcMgr::CharacteristicKind FileType)
+ {
+     check->VisitInclusionDirective(HashLoc, IncludeTok, FileName, IsAngled, FilenameRange, File, SearchPath, RelativePath, Imported, FileType);
+@@ -182,7 +188,13 @@ void CheckBase::VisitEndif(SourceLocatio
+ }
+ 
+ void CheckBase::VisitInclusionDirective(clang::SourceLocation , const clang::Token &, clang::StringRef , bool ,
+-                        clang::CharSourceRange , llvm::Optional<clang::FileEntryRef>, clang::StringRef ,
++                        clang::CharSourceRange ,
++#if LLVM_VERSION_MAJOR >= 16
++			clang::OptionalFileEntryRef,
++#else
++			llvm::Optional<clang::FileEntryRef>,
++#endif
++			clang::StringRef ,
+                         clang::StringRef , const clang::Module *, clang::SrcMgr::CharacteristicKind )
+ {
+     // Overriden in derived classes
+diff -up clazy-1.11/src/checkbase.h.omv~ clazy-1.11/src/checkbase.h
+--- clazy-1.11/src/checkbase.h.omv~	2023-03-24 14:48:08.163939447 +0100
++++ clazy-1.11/src/checkbase.h	2023-03-24 15:02:28.198429233 +0100
+@@ -91,7 +91,13 @@ public:
+     void Else(clang::SourceLocation loc, clang::SourceLocation ifLoc) override;
+     void Endif(clang::SourceLocation loc, clang::SourceLocation ifLoc) override;
+     void InclusionDirective(clang::SourceLocation HashLoc, const clang::Token &IncludeTok, clang::StringRef FileName, bool IsAngled,
+-                            clang::CharSourceRange FilenameRange, llvm::Optional<clang::FileEntryRef> File, clang::StringRef SearchPath,
++                            clang::CharSourceRange FilenameRange,
++#if LLVM_VERSION_MAJOR >= 16
++			    clang::OptionalFileEntryRef File,
++#else
++			    llvm::Optional<clang::FileEntryRef> File,
++#endif
++			    clang::StringRef SearchPath,
+                             clang::StringRef RelativePath, const clang::Module *Imported, clang::SrcMgr::CharacteristicKind FileType) override;
+ private:
+     CheckBase *const check;
+@@ -151,7 +157,13 @@ protected:
+     virtual void VisitElse(clang::SourceLocation loc, clang::SourceLocation ifLoc);
+     virtual void VisitEndif(clang::SourceLocation loc, clang::SourceLocation ifLoc);
+     virtual void VisitInclusionDirective(clang::SourceLocation HashLoc, const clang::Token &IncludeTok, clang::StringRef FileName, bool IsAngled,
+-                            clang::CharSourceRange FilenameRange, llvm::Optional<clang::FileEntryRef> File, clang::StringRef SearchPath,
++                            clang::CharSourceRange FilenameRange,
++#if LLVM_VERSION_MAJOR >= 16
++			    clang::OptionalFileEntryRef File,
++#else
++			    llvm::Optional<clang::FileEntryRef> File,
++#endif
++			    clang::StringRef SearchPath,
+                             clang::StringRef RelativePath, const clang::Module *Imported, clang::SrcMgr::CharacteristicKind FileType);
+ 
+     void enablePreProcessorCallbacks();
+diff -up clazy-1.11/src/checks/level0/lambda-in-connect.cpp.omv~ clazy-1.11/src/checks/level0/lambda-in-connect.cpp
+--- clazy-1.11/src/checks/level0/lambda-in-connect.cpp.omv~	2023-03-24 14:57:25.335499389 +0100
++++ clazy-1.11/src/checks/level0/lambda-in-connect.cpp	2023-03-24 14:57:32.490545007 +0100
+@@ -71,7 +71,7 @@ void LambdaInConnect::VisitStmt(clang::S
+ 
+     for (auto capture : captures) {
+         if (capture.getCaptureKind() == clang::LCK_ByRef) {
+-            VarDecl *declForCapture = capture.getCapturedVar();
++            auto declForCapture = capture.getCapturedVar();
+             if (declForCapture && declForCapture != receiverDecl && clazy::isValueDeclInFunctionContext(declForCapture))
+                 emitWarning(capture.getLocation(), "captured local variable by reference might go out of scope before lambda is called");
+         }
+diff -up clazy-1.11/src/checks/manuallevel/qt6-fwd-fixes.cpp.omv~ clazy-1.11/src/checks/manuallevel/qt6-fwd-fixes.cpp
+--- clazy-1.11/src/checks/manuallevel/qt6-fwd-fixes.cpp.omv~	2023-03-24 15:04:27.160186754 +0100
++++ clazy-1.11/src/checks/manuallevel/qt6-fwd-fixes.cpp	2023-03-24 15:04:56.289372206 +0100
+@@ -166,7 +166,13 @@ void Qt6FwdFixes::VisitDecl(clang::Decl
+ }
+ 
+ void Qt6FwdFixes::VisitInclusionDirective(clang::SourceLocation HashLoc, const clang::Token &IncludeTok, clang::StringRef FileName, bool IsAngled,
+-                        clang::CharSourceRange FilenameRange, llvm::Optional<clang::FileEntryRef> File, clang::StringRef SearchPath,
++                        clang::CharSourceRange FilenameRange,
++#if LLVM_VERSION_MAJOR >= 16
++			clang::OptionalFileEntryRef File,
++#else
++			llvm::Optional<clang::FileEntryRef> File,
++#endif
++			clang::StringRef SearchPath,
+                         clang::StringRef RelativePath, const clang::Module *Imported, clang::SrcMgr::CharacteristicKind FileType)
+ {
+     auto current_file = m_sm.getFilename(HashLoc);
+diff -up clazy-1.11/src/checks/manuallevel/qt6-fwd-fixes.h.omv~ clazy-1.11/src/checks/manuallevel/qt6-fwd-fixes.h
+--- clazy-1.11/src/checks/manuallevel/qt6-fwd-fixes.h.omv~	2023-03-24 15:03:59.283009260 +0100
++++ clazy-1.11/src/checks/manuallevel/qt6-fwd-fixes.h	2023-03-24 15:04:25.007173048 +0100
+@@ -47,7 +47,13 @@ public:
+     explicit Qt6FwdFixes(const std::string &name, ClazyContext *context);
+     void VisitDecl(clang::Decl *decl) override;
+     void VisitInclusionDirective(clang::SourceLocation HashLoc, const clang::Token &IncludeTok, clang::StringRef FileName, bool IsAngled,
+-                            clang::CharSourceRange FilenameRange, llvm::Optional<clang::FileEntryRef> File, clang::StringRef SearchPath,
++                            clang::CharSourceRange FilenameRange,
++#if LLVM_VERSION_MAJOR >= 16
++			    clang::OptionalFileEntryRef File,
++#else
++			    llvm::Optional<clang::FileEntryRef> File,
++#endif
++			    clang::StringRef SearchPath,
+                             clang::StringRef RelativePath, const clang::Module *Imported, clang::SrcMgr::CharacteristicKind FileType) override;
+     bool m_including_qcontainerfwd = false;
+     std::set<clang::StringRef> m_qcontainerfwd_included_in_files;
+diff -up clazy-1.11/src/checks/manuallevel/qt6-header-fixes.cpp.omv~ clazy-1.11/src/checks/manuallevel/qt6-header-fixes.cpp
+--- clazy-1.11/src/checks/manuallevel/qt6-header-fixes.cpp.omv~	2023-03-24 15:03:24.547788090 +0100
++++ clazy-1.11/src/checks/manuallevel/qt6-header-fixes.cpp	2023-03-24 15:03:46.310926664 +0100
+@@ -270,7 +270,13 @@ Qt6HeaderFixes::Qt6HeaderFixes(const std
+ }
+ 
+ void Qt6HeaderFixes::VisitInclusionDirective(clang::SourceLocation HashLoc, const clang::Token &IncludeTok, clang::StringRef FileName, bool IsAngled,
+-                        clang::CharSourceRange FilenameRange, llvm::Optional<clang::FileEntryRef> File, clang::StringRef SearchPath,
++                        clang::CharSourceRange FilenameRange,
++#if LLVM_VERSION_MAJOR >= 16
++			clang::OptionalFileEntryRef File,
++#else
++			llvm::Optional<clang::FileEntryRef> File,
++#endif
++			clang::StringRef SearchPath,
+                         clang::StringRef RelativePath, const clang::Module *Imported, clang::SrcMgr::CharacteristicKind FileType)
+ {
+     if (shouldIgnoreFile(HashLoc))
+diff -up clazy-1.11/src/checks/manuallevel/qt6-header-fixes.h.omv~ clazy-1.11/src/checks/manuallevel/qt6-header-fixes.h
+--- clazy-1.11/src/checks/manuallevel/qt6-header-fixes.h.omv~	2023-03-24 15:02:56.386608750 +0100
++++ clazy-1.11/src/checks/manuallevel/qt6-header-fixes.h	2023-03-24 15:03:22.265773555 +0100
+@@ -46,7 +46,13 @@ class Qt6HeaderFixes
+ public:
+     explicit Qt6HeaderFixes(const std::string &name, ClazyContext *context);
+     void VisitInclusionDirective(clang::SourceLocation HashLoc, const clang::Token &IncludeTok, clang::StringRef FileName, bool IsAngled,
+-                            clang::CharSourceRange FilenameRange, llvm::Optional<clang::FileEntryRef> File, clang::StringRef SearchPath,
++                            clang::CharSourceRange FilenameRange,
++#if LLVM_VERSION_MAJOR >= 16
++			    clang::OptionalFileEntryRef File,
++#else
++			    llvm::Optional<clang::FileEntryRef> File,
++#endif
++			    clang::StringRef SearchPath,
+                             clang::StringRef RelativePath, const clang::Module *Imported, clang::SrcMgr::CharacteristicKind FileType) override;
+ 
+ };
+diff -up clazy-1.11/src/PreProcessorVisitor.cpp.omv~ clazy-1.11/src/PreProcessorVisitor.cpp
+--- clazy-1.11/src/PreProcessorVisitor.cpp.omv~	2023-03-24 14:53:14.681900032 +0100
++++ clazy-1.11/src/PreProcessorVisitor.cpp	2023-03-24 14:53:43.690085257 +0100
+@@ -185,7 +185,12 @@ void PreProcessorVisitor::MacroExpands(c
+ 
+ void PreProcessorVisitor::InclusionDirective (clang::SourceLocation, const clang::Token &,
+                                               clang::StringRef FileName, bool IsAngled, clang::CharSourceRange FilenameRange,
+-                                              llvm::Optional<clang::FileEntryRef>, clang::StringRef, clang::StringRef,
++#if LLVM_VERSION_MAJOR >= 16
++					      clang::OptionalFileEntryRef,
++#else
++                                              llvm::Optional<clang::FileEntryRef>,
++#endif
++					      clang::StringRef, clang::StringRef,
+                                               const clang::Module *, clang::SrcMgr::CharacteristicKind)
+ {
+    if (m_ci.getPreprocessor().isInPrimaryFile() && !clazy::endsWith(FileName.str(), ".moc")) {
+diff -up clazy-1.11/src/PreProcessorVisitor.h.omv~ clazy-1.11/src/PreProcessorVisitor.h
+--- clazy-1.11/src/PreProcessorVisitor.h.omv~	2023-03-24 14:52:34.106640856 +0100
++++ clazy-1.11/src/PreProcessorVisitor.h	2023-03-24 14:53:13.427892024 +0100
+@@ -71,7 +71,12 @@ protected:
+                       clang::SourceRange range, const clang::MacroArgs *) override;
+     void InclusionDirective (clang::SourceLocation HashLoc, const clang::Token &IncludeTok,
+                              clang::StringRef FileName, bool IsAngled, clang::CharSourceRange FilenameRange,
+-                             llvm::Optional<clang::FileEntryRef> File, clang::StringRef SearchPath, clang::StringRef RelativePath,
++#if LLVM_VERSION_MAJOR >= 16
++			     clang::OptionalFileEntryRef File,
++#else
++                             llvm::Optional<clang::FileEntryRef> File,
++#endif
++			     clang::StringRef SearchPath, clang::StringRef RelativePath,
+                              const clang::Module *Imported, clang::SrcMgr::CharacteristicKind FileType) override;
+ private:
+     std::string getTokenSpelling(const clang::MacroDefinition &) const;
+diff -up clazy-1.11/src/SourceCompatibilityHelpers.h.omv~ clazy-1.11/src/SourceCompatibilityHelpers.h
+--- clazy-1.11/src/SourceCompatibilityHelpers.h.omv~	2023-03-24 14:47:12.784584398 +0100
++++ clazy-1.11/src/SourceCompatibilityHelpers.h	2023-03-24 14:59:41.742368860 +0100
+@@ -109,14 +109,23 @@ inline auto getBuffer(const clang::Sourc
+ {
+ #if LLVM_VERSION_MAJOR >= 12
+     auto buffer = sm.getBufferOrNone(id);
++#if LLVM_VERSION_MAJOR >= 16
++    *invalid = !buffer.has_value();
++#else
+     *invalid = !buffer.hasValue();
++#endif
+     return buffer;
+ #else
+     return sm.getBuffer(id, invalid);
+ #endif
+ }
+ 
+-#if LLVM_VERSION_MAJOR >= 12
++#if LLVM_VERSION_MAJOR >= 16
++
++#define GET_LEXER(id, inputFile, sm, lo) \
++clang::Lexer(id, inputFile.value(), sm, lo)
++
++#elif LLVM_VERSION_MAJOR >= 12
+ 
+ #define GET_LEXER(id, inputFile, sm, lo) \
+ clang::Lexer(id, inputFile.getValue(), sm, lo)

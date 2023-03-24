@@ -11,6 +11,7 @@ Url:		http://www.aelog.org/
 Source0:	http://download.kde.org/stable/%{name}/%{version}/src/%{name}-%{version}.tar.xz
 Patch0:		clazy-clang-isnt-buggy-anymore.patch
 Patch1:		clazy-1.11-clang-15.patch
+Patch2:		clazy-1.11-llvm-16.patch
 BuildRequires:	cmake(ECM)
 BuildRequires:	cmake(Polly)
 BuildRequires:	llvm-devel
