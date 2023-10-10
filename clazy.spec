@@ -1,17 +1,19 @@
 %define _disable_lto 1
 %define _disable_ld_no_undefined 1
 
+# The stable 1.11 release is stuck on LLVM 14.
+# Instead of backporting all the patches needed for newer versions,
+# it's both faster and safer to use a 1.12 snapshot for the time being.
+%define git 20231010
+
 Name:		clazy
 Summary:	Qt oriented code checker
-Version:	1.11
-Release:	7
+Version:	1.12
+Release:	%{?git:0.%{git}.}1
 Group:		Graphical desktop/KDE
 License:	GPLv2
-Url:		http://www.aelog.org/
-Source0:	http://download.kde.org/stable/%{name}/%{version}/src/%{name}-%{version}.tar.xz
-Patch0:		clazy-clang-isnt-buggy-anymore.patch
-Patch1:		clazy-1.11-clang-15.patch
-Patch2:		clazy-1.11-llvm-16.patch
+Url:		https://invent.kde.org/sdk/clazy
+Source0:	https://%{?git:invent.kde.org/sdk/clazy/-/archive/master/clazy-master.tar.bz2}%{!?git:download.kde.org/stable/%{name}/%{version}/src/%{name}-%{version}.tar.xz}
 BuildRequires:	cmake(ECM)
 BuildRequires:	cmake(Polly)
 BuildRequires:	llvm-devel
@@ -22,7 +24,7 @@ Qt oriented code checker based on clang framework.
 Krazy's little brother. 
 
 %prep
-%autosetup -p1
+%autosetup -p1 %{?git:-n %{name}-master}
 %cmake_kde5
 
 %build
@@ -31,10 +33,12 @@ Krazy's little brother.
 %install
 %ninja_install -C build
 
+%if ! %{cross_compiling}
 %check
 cd build
 export PATH=`pwd`/bin:$PATH
 ctest || :
+%endif
 
 %files
 %doc %{_docdir}/clazy/*
