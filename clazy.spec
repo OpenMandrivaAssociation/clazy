@@ -4,7 +4,7 @@
 # The stable 1.11 release is stuck on LLVM 14.
 # Instead of backporting all the patches needed for newer versions,
 # it's both faster and safer to use a 1.12 snapshot for the time being.
-%define git 20231010
+%define git 20240127
 
 Name:		clazy
 Summary:	Qt oriented code checker
@@ -14,6 +14,7 @@ Group:		Graphical desktop/KDE
 License:	GPLv2
 Url:		https://invent.kde.org/sdk/clazy
 Source0:	https://%{?git:invent.kde.org/sdk/clazy/-/archive/master/clazy-master.tar.bz2}%{!?git:download.kde.org/stable/%{name}/%{version}/src/%{name}-%{version}.tar.xz}
+Patch:		clazy-llvm-18.patch
 BuildRequires:	cmake(ECM)
 BuildRequires:	cmake(Polly)
 BuildRequires:	llvm-devel

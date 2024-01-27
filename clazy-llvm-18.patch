@@ -1,0 +1,24 @@
+diff -up clazy-master/src/FunctionUtils.h.omv~ clazy-master/src/FunctionUtils.h
+--- clazy-master/src/FunctionUtils.h.omv~	2024-01-27 16:25:23.493593338 +0100
++++ clazy-master/src/FunctionUtils.h	2024-01-27 16:26:34.970393731 +0100
+@@ -118,7 +118,7 @@ inline bool classImplementsMethod(const
+ 
+     llvm::StringRef methodName = clazy::name(method);
+     for (auto *m : record->methods()) {
+-        if (!m->isPure() && clazy::name(m) == methodName && parametersMatch(m, method)) {
++        if (!m->isPureVirtual() && clazy::name(m) == methodName && parametersMatch(m, method)) {
+             return true;
+         }
+     }
+diff -up clazy-master/src/checks/level2/virtual-call-ctor.cpp.omv~ clazy-master/src/checks/level2/virtual-call-ctor.cpp
+--- clazy-master/src/checks/level2/virtual-call-ctor.cpp.omv~	2024-01-27 16:27:33.835042673 +0100
++++ clazy-master/src/checks/level2/virtual-call-ctor.cpp	2024-01-27 16:27:38.991099113 +0100
+@@ -123,7 +123,7 @@ SourceLocation VirtualCallCtor::contains
+         }
+ 
+         if (memberDecl->getParent() == classDecl) {
+-            if (memberDecl->isPure()) {
++            if (memberDecl->isPureVirtual()) {
+                 return clazy::getLocStart(callExpr);
+             }
+             if (containsVirtualCall(classDecl, memberDecl->getBody(), processedStmts).isValid()) {
