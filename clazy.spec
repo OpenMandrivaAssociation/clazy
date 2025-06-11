@@ -13,7 +13,7 @@ Release:	%{?git:0.%{git}.}1
 Group:		Graphical desktop/KDE
 License:	GPLv2
 Url:		https://invent.kde.org/sdk/clazy
-Source0:	https://%{?git:invent.kde.org/sdk/clazy/-/archive/master/clazy-master.tar.bz2}%{!?git:download.kde.org/stable/%{name}/%{version}/src/%{name}-%{version}.tar.xz}
+Source0:	https://invent.kde.org/sdk/clazy/-/archive/%{version}/clazy-%{version}.tar.bz2
 BuildRequires:	cmake(ECM)
 BuildRequires:	cmake(Polly)
 BuildRequires:	llvm-devel
