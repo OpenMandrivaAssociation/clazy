@@ -4,12 +4,12 @@
 # The stable 1.12 release is stuck on LLVM 14.
 # Instead of backporting all the patches needed for newer versions,
 # it's both faster and safer to use a 1.13 snapshot for the time being.
-%define git 20240927
+#define git 20240927
 
 Name:		clazy
 Summary:	Qt oriented code checker
-Version:	1.13
-Release:	%{?git:0.%{git}.}2
+Version:	1.14
+Release:	%{?git:0.%{git}.}1
 Group:		Graphical desktop/KDE
 License:	GPLv2
 Url:		https://invent.kde.org/sdk/clazy
