@@ -20,7 +20,6 @@ BuildRequires:	llvm-devel
 BuildRequires:	clang-devel
 
 %patchlist
-https://invent.kde.org/sdk/clazy/-/merge_requests/146.patch
 
 %description
 Qt oriented code checker based on clang framework. 
