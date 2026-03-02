@@ -8,12 +8,13 @@
 
 Name:		clazy
 Summary:	Qt oriented code checker
-Version:	1.16
+Version:	1.17
 Release:	%{?git:0.%{git}.}1
 Group:		Graphical desktop/KDE
 License:	GPLv2
 Url:		https://invent.kde.org/sdk/clazy
-Source0:	https://invent.kde.org/sdk/clazy/-/archive/%{version}/clazy-v%{version}.tar.bz2
+Source0:	https://invent.kde.org/sdk/clazy/-/archive/v%{version}/clazy-v%{version}.tar.bz2
+BuildSystem:	cmake
 BuildRequires:	cmake(ECM)
 BuildRequires:	cmake(Polly)
 BuildRequires:	llvm-devel
@@ -25,19 +26,9 @@ BuildRequires:	clang-devel
 Qt oriented code checker based on clang framework. 
 Krazy's little brother. 
 
-%prep
-%autosetup -p1 %{?git:-n %{name}-master}
-%cmake_kde5
-
-%build
-%ninja -C build
-
-%install
-%ninja_install -C build
-
 %if ! %{cross_compiling}
 %check
-cd build
+cd _OMV_rpm_build
 export PATH=`pwd`/bin:$PATH
 ctest || :
 %endif
@@ -47,5 +38,6 @@ ctest || :
 %{_bindir}/%{name}
 %{_bindir}/%{name}-standalone
 %{_libdir}/ClazyPlugin.so
+%{_libdir}/ClazyClangTidy.so
 %doc %{_mandir}/man1/%{name}.1*
 %{_datadir}/metainfo/org.kde.clazy.metainfo.xml
