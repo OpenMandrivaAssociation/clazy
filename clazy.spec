@@ -8,7 +8,7 @@
 
 Name:		clazy
 Summary:	Qt oriented code checker
-Version:	1.17
+Version:	1.17.1
 Release:	%{?git:0.%{git}.}2
 Group:		Graphical desktop/KDE
 License:	GPLv2
